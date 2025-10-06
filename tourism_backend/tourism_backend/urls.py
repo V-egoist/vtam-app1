@@ -3,23 +3,20 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+# Import the Graphene view
+from graphene_django.views import GraphQLView
+# Import the schema we just created
+from .schema import schema
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     # -----------------------------------------------------------
-    # API Endpoints
+    # API Endpoints (Single GraphQL endpoint)
     # -----------------------------------------------------------
-    # Direct all requests starting with /api/auth/ to the users app URLs.
-    path('api/auth/', include('apps.users.urls')),
+    # The single entry point for all API queries and mutations
+    # graphiql=True enables the in-browser IDE for testing (essential for development)
+    path('api/graphql/', GraphQLView.as_view(graphiql=True, schema=schema), name='graphql'),
     
-        path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    
-    # Maps to /api/auth/token/refresh/
-    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # Other apps will be included here later (e.g., path('api/locations/', ...))
+    # NOTE: Any previous path('api/auth/', include('apps.users.urls')) should be removed.
 ]

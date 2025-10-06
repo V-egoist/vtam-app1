@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.users',
     'rest_framework',
+    'graphene_django'
 ]
 
 MIDDLEWARE = [
@@ -164,4 +165,14 @@ SIMPLE_JWT = {
     # Use the username field for authentication
     'USER_ID_FIELD': 'id',
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+}
+
+#graphene settings
+GRAPHENE = {
+    # Point to the root Schema file (we will create this next)
+    'SCHEMA': 'tourism_backend.schema.schema', 
+    'MIDDLEWARE': (
+        # Useful for debugging GraphQL queries in development
+        'graphene_django.debug.DjangoDebugMiddleware',
+    ),
 }
