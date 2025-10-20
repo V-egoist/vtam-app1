@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.users',
     'rest_framework',
-    'graphene_django'
+    'graphene_django',
+    'apps.tours',
+    'django_filters',
+    
 ]
 
 MIDDLEWARE = [
@@ -50,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        
+
 ]
 
 ROOT_URLCONF = 'tourism_backend.urls'
@@ -134,38 +140,12 @@ AUTH_USER_MODEL = 'users.User'
 # --------------------------------------------------------------------------
 # Django REST Framework (DRF) Configuration
 # --------------------------------------------------------------------------
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        # This tells DRF to check for a JWT token in the request header (Bearer <token>)
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # Session authentication is useful for testing in the browser/Postman
-        'rest_framework.authentication.SessionAuthentication', 
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        # Default is to allow all access, we'll refine this later on
-        'rest_framework.permissions.AllowAny',
-    )
-}
+
 
 # --------------------------------------------------------------------------
 # Simple JWT Configuration
 # --------------------------------------------------------------------------
-from datetime import timedelta
 
-SIMPLE_JWT = {
-    # How long the Access Token is valid for (e.g., 5 minutes - short is safer)
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60), 
-    # How long the Refresh Token is valid for (e.g., 1 day)
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1), 
-    
-    # Standard settings for token header and type
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    
-    # Use the username field for authentication
-    'USER_ID_FIELD': 'id',
-    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-}
 
 #graphene settings
 GRAPHENE = {

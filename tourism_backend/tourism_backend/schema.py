@@ -2,27 +2,32 @@
 
 import graphene
 import graphql_jwt
-# 1. Ensure you have the correct import for your users app schema
+
+# Import users app schema
 from apps.users import schema as users_schema 
+from apps.tours import schema as tours_schema # <--- ADD THIS IMPORT
 
 # -----------------------------------------------------------
-# 2. Root Query (MUST be defined before the Mutation class)
+# Root Query
 # -----------------------------------------------------------
-# Inherit all query fields from users_schema.UserQuery
-class Query(users_schema.UserQuery, graphene.ObjectType):
+class Query(
+    users_schema.UserQuery, 
+    tours_schema.LocationQuery, # <--- ADD THIS INHERITANCE
+    graphene.ObjectType
+):
     hello = graphene.String(default_value="Hello Valentino! Your GraphQL API is running.")
 
 # -----------------------------------------------------------
-# 3. Root Mutation
+# Root Mutation
 # -----------------------------------------------------------
-# Inherit all mutation fields from users_schema.UserMutation
 class Mutation(users_schema.UserMutation, graphene.ObjectType):
-    # --- JWT Authentication Mutations ---
+    # 1. Login (Simplified to only provide Access Token for stability)
     token_auth = graphql_jwt.ObtainJSONWebToken.Field() 
-    verify_token = graphql_jwt.Verify.Field()      
-    refresh_token = graphql_jwt.Refresh.Field()    
+
+    # 2. Security Check (Verification is the only essential JWT utility to keep)
+    verify_token = graphql_jwt.Verify.Field()
 
 # -----------------------------------------------------------
-# 4. Final Schema Object
+# Final GraphQL schema
 # -----------------------------------------------------------
 schema = graphene.Schema(query=Query, mutation=Mutation)
